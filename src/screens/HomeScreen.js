@@ -17,7 +17,7 @@ export default function HomeScreen({navigation}) {
         mode="contained"
         uppercase={false}
         labelStyle={Styles.labelStyle}
-        // onPress={() => navigation.navigate('CaptureImage')}
+        onPress={() => navigation.navigate('DrugRecomendation')}
       >
         Drug Recomendation
       </Button>
@@ -26,7 +26,7 @@ export default function HomeScreen({navigation}) {
         mode="contained"
         uppercase={false}
         labelStyle={Styles.labelStyle}
-        // onPress={() => navigation.navigate('CaptureImage')}
+        onPress={() => navigation.navigate('DrugOn-OffLable')}
       >
         Off Lable Drugs Detection
       </Button>

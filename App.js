@@ -17,6 +17,9 @@ import {theme} from '@react-navigation/native';
 import HomeScreen from './src/screens/HomeScreen';
 import ImageCaptureScreen from './src/screens/ImageCaptureScreen';
 import DrugStatusScreen from './src/screens/DrugStatusScreen';
+import DrugOffOnLableScreen from './src/screens/DrugOff-OnLableScreen';
+import ForumDetailsScreen from './src/screens/ForumDetailsScreen';
+import DrugRecomendationScreen from './src/screens/DrugRecomendationScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,12 +33,27 @@ function App() {
             <Stack.Screen
               name="CaptureImage"
               component={ImageCaptureScreen}
-              options={{title: 'Take an Image'}}
+              options={{title: 'Counterfriet Drug Detection'}}
             />
             <Stack.Screen
               name="DrugStatus"
               component={DrugStatusScreen}
               options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="DrugOn-OffLable"
+              component={DrugOffOnLableScreen}
+              options={{title: 'Off Lable Drugs Detection'}}
+            />
+            <Stack.Screen
+              name="ForumDetails"
+              component={ForumDetailsScreen}
+              options={{title: 'Off Lable Drugs Detection'}}
+            />
+            <Stack.Screen
+              name="DrugRecomendation"
+              component={DrugRecomendationScreen}
+              options={{title: 'Drug Recomendation'}}
             />
           </Stack.Navigator>
         </NavigationContainer>

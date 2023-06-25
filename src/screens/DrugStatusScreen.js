@@ -1,35 +1,72 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-import {Button, TextInput} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import {theme} from '../core/theme';
+import axios from 'axios';
 
-const DrugData = [
-  {
-    manufacture: 'dcdc',
-    store: 'dcd',
-    main_distributor: null,
-    sub_distributor: 'adcas',
-    pharmacy: 'frwd',
-  },
-];
+// const DrugData = [
+//   {
+//     manufacture: 'dcdc',
+//     store: 'dcd',
+//     main_distributor: null,
+//     sub_distributor: 'adcas',
+//     pharmacy: 'frwd',
+//   },
+// ];
 
-export default function DrugStatusScreen({navigation}) {
+export default function DrugStatusScreen({route, navigation}) {
+
+  const { imageSource } = route.params;
   const [isLoading, setIsLoading] = React.useState(true);
   const [data, setData] = React.useState(null);
   const [isValid, setIsValid] = React.useState(false);
 
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //     setData(DrugData);
+  //     console.log(data);
+  //   }, 4000);
+
+  //   console.log(imageSource);
+
+  //   return () => {
+  //     setIsLoading(true);
+  //     setData(null);
+  //   };
+  // }, []);
+
   React.useEffect(() => {
-    setTimeout(() => {
+    setIsLoading(true);
+
+    if (imageSource) {
+      const formData = new FormData();
+      formData.append('image', {
+        uri: imageSource.uri,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      });
+
+      axios
+        .post('https://e8c4-35-245-159-145.ngrok.io/barcode', formData)
+        .then(response => {
+          console.log(response.data);
+          setData(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setIsLoading(false);
+        });
+    } else {
       setIsLoading(false);
-      setData(DrugData);
-      console.log(data);
-    }, 4000);
+    }
 
     return () => {
       setIsLoading(true);
       setData(null);
     };
-  }, []);
+  }, [imageSource]);
 
   React.useEffect(() => {
     if (data && Array.isArray(data) && data.length > 0) {
@@ -68,11 +105,11 @@ export default function DrugStatusScreen({navigation}) {
         <View>
           {data && data.length > 0 ? (
             <>
-              {renderField('Manufacture', data[0]?.manufacture)}
-              {renderField('Store', data[0]?.store)}
-              {renderField('Main Distributor', data[0]?.main_distributor)}
-              {renderField('Sub Distributor', data[0]?.sub_distributor)}
-              {renderField('Pharmacy', data[0]?.pharmacy)}
+              {renderField('Manufacture', data[0]?.manufacture_id)}
+              {renderField('Store', data[0]?.store_id)}
+              {renderField('Main Distributor', data[0]?.main_distributor_id)}
+              {renderField('Sub Distributor', data[0]?.sub_distributor_id)}
+              {renderField('Pharmacy', data[0]?.pharmacy_id)}
               <Text
                 style={[
                   styles.validationText,

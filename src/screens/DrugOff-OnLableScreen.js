@@ -4,6 +4,7 @@ import { TextInput, Button, IconButton } from 'react-native-paper';
 import { theme } from '../core/theme';
 import * as yup from 'yup';
 import {Formik} from 'formik';
+import axios from 'axios';
 
 let validSchema = yup.object().shape({
   drug: yup.string().required('Drug Name is required'),
@@ -17,11 +18,14 @@ export default function DrugOffOnLableScreen({navigation}) {
     <Formik
       initialValues={{drug: '', disease: ''}}
       validateOnMount={true}
-      onSubmit={values => {
-        const result = `The drug ${values.drug} is ${
-          values.drug ? 'on-label' : 'off-label'
-        } for the disease: ${values.disease}`;
-        setResultText(result);
+      onSubmit={async (values) => {
+        const response = await axios.post('https://e8c4-35-245-159-145.ngrok.io/api/check', values);
+        console.log(response.data);
+        setResultText(response.data);
+        // const result = `The drug ${values.drug} is ${
+        //   values.drug ? 'on-label' : 'off-label'
+        // } for the disease: ${values.disease}`;
+        // setResultText(result);
       }}
       validationSchema={validSchema}>
       {({

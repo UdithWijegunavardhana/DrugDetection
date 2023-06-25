@@ -108,7 +108,9 @@ export default function ImageCaptureScreen({navigation}) {
                 mode="contained"
                 uppercase={false}
                 labelStyle={styles.labelStyle}
-                onPress={() => navigation.navigate('DrugStatus')}>
+                onPress={() =>
+                  navigation.navigate('DrugStatus', {imageSource})
+                }>
                 Proceed
               </Button>
             </>

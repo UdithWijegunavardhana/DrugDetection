@@ -5,26 +5,38 @@ import { TextInput, Button, IconButton } from 'react-native-paper';
 import { theme } from '../core/theme';
 import * as yup from 'yup';
 import {Formik} from 'formik';
+import axios from 'axios';
 
 let validSchema2 = yup.object().shape({
   disease: yup.string().required('Disease is required'),
 });
   
 export default function ForumDetailsScreen({navigation}) {
-    const [resultText, setResultText] = React.useState('');
     const [onLabelDrugs, setOnLabelDrugs] = React.useState([]);
     const [offLabelDrugs, setOffLabelDrugs] = React.useState([]);
 
   return (
     <Formik
       initialValues={{disease: ''}}
-      onSubmit={values => {
+      onSubmit={async values => {
+        const response = await axios.post(
+          'https://e8c4-35-245-159-145.ngrok.io/api/viewform',
+          values,
+        );
         console.log(values);
-        const onLabelDrugsData = ['Drug A', 'Drug B', 'Drug C'];
-        const offLabelDrugsData = ['Drug X', 'Drug Y', 'Drug Z'];
+        console.log(response.data.off_label);
+        console.log(response.data.on_label);
 
-        setOnLabelDrugs(onLabelDrugsData);
-        setOffLabelDrugs(offLabelDrugsData);
+        setOnLabelDrugs(
+          response.data.on_label.length > 0
+            ? response.data.on_label
+            : ['No On-Lable Drugs'],
+        );
+        setOffLabelDrugs(
+          response.data.off_label.length > 0
+            ? response.data.off_label
+            : ['No Off-Lable Drugs'],
+        );
       }}
       validationSchema={validSchema2}>
       {({

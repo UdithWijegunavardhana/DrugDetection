@@ -20,7 +20,7 @@ export default function ForumDetailsScreen({navigation}) {
       initialValues={{disease: ''}}
       onSubmit={async values => {
         const response = await axios.post(
-          'https://e8c4-35-245-159-145.ngrok.io/api/viewform',
+          'https://791b-34-135-88-253.ngrok.io/api/viewform',
           values,
         );
         console.log(values);
@@ -149,11 +149,13 @@ const Styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.primary,
     textAlign: 'center',
+    color: 'black',
   },
   tableText: {
     fontSize: 14,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    color: 'black',
   },
   tableBorderStyle: {
     borderWidth: 1,
@@ -164,6 +166,7 @@ const Styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
     marginBottom: 5,
+    color: 'black',
   },
   tableContainer: {
     flexDirection: 'row',

@@ -20,6 +20,8 @@ import DrugStatusScreen from './src/screens/DrugStatusScreen';
 import DrugOffOnLableScreen from './src/screens/DrugOff-OnLableScreen';
 import ForumDetailsScreen from './src/screens/ForumDetailsScreen';
 import DrugRecomendationScreen from './src/screens/DrugRecomendationScreen';
+import DrugStatusScreenValid from './src/screens/DrugStatusScreenValid';
+import DrugStatusScreenInvalid from './src/screens/DrugStatusScreenInvalid';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +55,16 @@ function App() {
             <Stack.Screen
               name="DrugRecomendation"
               component={DrugRecomendationScreen}
+              options={{title: 'Drug Recomendation'}}
+            />
+            <Stack.Screen
+              name="ValidDrug"
+              component={DrugStatusScreenValid}
+              options={{title: 'Drug Recomendation'}}
+            />
+            <Stack.Screen
+              name="InvalidDrug"
+              component={DrugStatusScreenInvalid}
               options={{title: 'Drug Recomendation'}}
             />
           </Stack.Navigator>

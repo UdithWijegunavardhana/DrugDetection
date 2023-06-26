@@ -4,6 +4,7 @@ import { TextInput, Button, IconButton } from 'react-native-paper';
 import { theme } from '../core/theme';
 import * as yup from 'yup';
 import {Formik} from 'formik';
+import axios from 'axios';
 
 let validSchema3 = yup.object().shape({
     condition: yup.string().required('Condition is required'),
@@ -15,16 +16,16 @@ export default function DrugRecomendationScreen({navigation}) {
   return (
     <Formik
       initialValues={{condition: ''}}
-      onSubmit={values => {
+      onSubmit={async (values) => {
         console.log(values);
-        const recommendedDrugsData = [
-          'Drug A',
-          'Drug B',
-          'Drug C',
-          'Drug D',
-          'Drug E',
-        ];
-        setRecommendedDrugs(recommendedDrugsData);
+        // fetchRecommendedDrugs(values);
+        try {
+          const response = await axios.post('https://e82a-34-172-14-252.ngrok.io/api/recommend', values);
+          console.log('Response : ',response.data);
+          setRecommendedDrugs(response.data);
+        } catch (error) {
+          console.error(error);
+        }
       }}
       validationSchema={validSchema3}>
       {({
@@ -95,6 +96,7 @@ const Styles = StyleSheet.create({
   headerText:{
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'black',
   },
   Button: {
     marginTop: 20,
@@ -128,10 +130,12 @@ const Styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'black',
   },
   recommendedDrug: {
     fontSize: 16,
     marginBottom: 10,
+    color: 'black',
   },
 });
   

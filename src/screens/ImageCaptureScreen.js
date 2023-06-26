@@ -5,15 +5,19 @@ import {
   StyleSheet,
   Platform,
   PermissionsAndroid,
+  Button
 } from 'react-native';
-import {Button} from 'react-native-paper';
+// import {Button} from 'react-native-paper';
 import {theme} from '../core/theme';
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera} from 'react-native-image-picker';
 
-export default function ImageCaptureScreen({navigation}) {
+export default function ImageCaptureScreen({route, navigation}) {
   const [filePath, setFilePath] = React.useState({});
   const [imageSource, setImageSource] = React.useState(null);
+  const [imageData , setImageData] = React.useState();
+  const [validButtonResponce, setvalidButtonResponce] = React.useState();
+  const [invalidButtonResponce, setinvalidButtonResponce] = React.useState();
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -91,47 +95,78 @@ export default function ImageCaptureScreen({navigation}) {
 
           const source = {uri};
           setImageSource(source);
+          setImageData(assets);
         }
       });
     }
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.container}>
-        <View style={styles.container}>
-          {imageSource ? (
-            <>
-              <Image source={imageSource} style={styles.imageStyle} />
-              <Button
-                style={styles.proceedButton}
-                mode="contained"
-                uppercase={false}
-                labelStyle={styles.labelStyle}
-                onPress={() =>
-                  navigation.navigate('DrugStatus', {imageSource})
-                }>
-                Proceed
-              </Button>
-            </>
-          ) : (
-            <>
-              <Image
-                source={require('../assets/images/no-image.png')}
-                style={styles.image}
-              />
-              <Button
-                style={styles.Button}
-                mode="contained"
-                uppercase={false}
-                labelStyle={styles.labelStyle}
-                onPress={() => captureImage('photo')}>
-                Launch Camera for Image
-              </Button>
-            </>
-          )}
-        </View>
-      </View>
+    <View style={styles.container}>
+      {imageSource ? (
+        <>
+          <Image source={imageSource} style={styles.imageStyle} />
+          <View style={styles.buttonContainer}>
+            {/* <Button
+              style={styles.transparentButton}
+              // mode="contained"
+              onPress={validButtonPress}></Button> */}
+            {/* <Button
+              style={styles.proceedButton}
+              mode="contained"
+              uppercase={false}
+              labelStyle={styles.labelStyle}
+              onPress={() => navigation.navigate('DrugStatus', {imageData})}
+              >
+              Proceed
+            </Button> */}
+            <Button
+              onPress={() => navigation.navigate('ValidDrug')}
+              title="Valid"
+              style={styles.transparentButton}
+              color="#841584"
+            />
+            <Button
+              onPress={() => navigation.navigate('DrugStatus', {imageData})}
+              title="Proceed"
+              style={styles.proceedButton}
+              color="#841584"
+            />
+            <Button
+              onPress={() => navigation.navigate('InvalidDrug')}
+              title="Invalid"
+              height='20%'
+              style={styles.transparentButton}
+              color="#841584"
+            />
+            {/* <Button
+              style={styles.transparentButton}
+              // mode="contained"
+              onPress={invalidButtonPress}></Button> */}
+          </View>
+        </>
+      ) : (
+        <>
+          <Image
+            source={require('../assets/images/no-image.png')}
+            style={styles.image}
+          />
+          {/* <Button
+            style={styles.Button}
+            mode="contained"
+            uppercase={false}
+            labelStyle={styles.labelStyle}
+            onPress={() => captureImage('photo')}>
+            Launch Camera for Image
+          </Button> */}
+          <Button
+              onPress={() => captureImage('photo')}
+              title="Launch Camera for Image"
+              color="#143AA9"
+              style={styles.Button}
+            />
+        </>
+      )}
     </View>
   );
 }
@@ -152,14 +187,14 @@ const styles = StyleSheet.create({
     padding: 10,
     color: 'black',
   },
-  buttonStyle: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 5,
-  },
+  // buttonStyle: {
+  //   alignItems: 'center',
+  //   flexDirection: 'row',
+  //   padding: 5,
+  // },
   imageStyle: {
     width: 400,
-    height: 650,
+    height: 500,
     margin: 5,
   },
   image: {
@@ -167,19 +202,20 @@ const styles = StyleSheet.create({
     height: '32%',
     resizeMode: 'cover',
     alignSelf: 'center',
-    marginBottom: 10,
+    marginTop: 80,
+    marginBottom: '50%',
   },
   Button: {
-    marginTop: '90%',
+    // marginTop: '90%',
     height: '8%',
     width: '80%',
     borderRadius: 20,
     backgroundColor: theme.colors.primary,
   },
   proceedButton: {
-    marginTop: '10%',
-    height: '8%',
-    width: '80%',
+    marginTop: '8%',
+    height: '72%',
+    width: '55%',
     borderRadius: 20,
     backgroundColor: theme.colors.primary,
   },
@@ -187,7 +223,23 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     justifyContent: 'center',
-    marginTop: 22,
+    marginTop: 17,
     color: theme.colors.white,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  transparentButton: {
+    // marginRight: 10,
+    marginTop:'7%',
+    // borderRadius: 20,
+    height:'80%',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    alignItems:'center',
+    width:'20%'
   },
 });

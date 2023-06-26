@@ -18,8 +18,11 @@ export default function DrugOffOnLableScreen({navigation}) {
     <Formik
       initialValues={{drug: '', disease: ''}}
       validateOnMount={true}
-      onSubmit={async (values) => {
-        const response = await axios.post('https://e8c4-35-245-159-145.ngrok.io/api/check', values);
+      onSubmit={async values => {
+        const response = await axios.post(
+          'https://791b-34-135-88-253.ngrok.io/api/check',
+          values,
+        );
         console.log(response.data);
         setResultText(response.data);
         // const result = `The drug ${values.drug} is ${
@@ -81,7 +84,7 @@ export default function DrugOffOnLableScreen({navigation}) {
             uppercase={false}
             labelStyle={Styles.labelStyle}
             onPress={() => navigation.navigate('ForumDetails')}>
-                View as a Form
+            View as a Form
           </Button>
         </View>
       )}
@@ -144,7 +147,7 @@ const Styles = StyleSheet.create({
     fontSize:20,
     marginTop: 20,
     fontWeight:'bold',
-    color: theme.primary,
+    color: 'black',
     textAlign:'center'
   },
 });

@@ -1,36 +1,32 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, TextInput} from 'react-native-paper';
 import {theme} from '../core/theme';
-import RNFS from 'react-native-fs';
 import axios from 'axios';
 
-const DrugData = [
-  {
-    main_distributor_id: true,
-    manufacture_id: true,
-    pharmacy_id: true,
-    store_id: true,
-    sub_distributor_id: true,
-  },
-];
+// const DrugData = [
+//   {
+//     main_distributor_id: true,
+//     manufacture_id: true,
+//     pharmacy_id: false,
+//     store_id: true,
+//     sub_distributor_id: false,
+//   },
+// ];
 
-export default function DrugStatusScreenValid({navigation}) {
-  const [isLoading, setIsLoading] = React.useState(false);
+export default function DrugStatusScreen({navigation}) {
+  const [isLoading, setIsLoading] = React.useState(true);
   const [data, setData] = React.useState(null);
   const [isValid, setIsValid] = React.useState(false);
 
   React.useEffect(() => {
+
     const fetchData = async () => {
       try {
-        // const response = await axios.get(
-        //   'https://0c2c-212-104-225-103.ngrok-free.app/check_id_status/8902541600416'
-        // );
         const response = await axios.get(
           'http://172.20.10.4:5000/check_id_status/8902541600416',
         );
-        // setData(response.data);
-        setData(DrugData);
+        setData(response.data);
         setIsLoading(false);
         console.log(response.data);
       } catch (error) {
@@ -40,11 +36,22 @@ export default function DrugStatusScreenValid({navigation}) {
     };
 
     fetchData();
+
+    setTimeout(() => {
+      setIsLoading(false);
+      // setData(DrugData);
+      console.log(data);
+    }, 2000);
+
+    return () => {
+      setIsLoading(true);
+      setData(null);
+    };
   }, []);
 
   React.useEffect(() => {
     if (data && Array.isArray(data) && data.length > 0) {
-      const isDataValid = Object.values(data).every(
+      const isDataValid = Object.values(data[0]).every(
         value => value !== undefined && value !== null,
       );
       setIsValid(isDataValid);
@@ -54,8 +61,7 @@ export default function DrugStatusScreenValid({navigation}) {
   }, [data]);
 
   const renderField = (label, value) => {
-    const isDataAvailable = value !== undefined && value !== null;
-
+    const isDataAvailable = value !== undefined && value !== false;
     return (
       <View style={styles.fieldContainer}>
         <View
@@ -69,84 +75,46 @@ export default function DrugStatusScreenValid({navigation}) {
     );
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="blue" />
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
-      {data && data.length > 0 ? (
-        <>
-          {renderField('Manufacture', data?.manufacture_id)}
-          {renderField('Store', data?.store_id)}
-          {renderField('Main Distributor', data?.main_distributor_id)}
-          {renderField('Sub Distributor', data?.sub_distributor_id)}
-          {renderField('Pharmacy', data?.pharmacy_id)}
-          <Text
-            style={[styles.validationText, {color: isValid ? 'green' : 'red'}]}>
-            {isValid ? 'Drug is valid' : 'Drug is invalid'}
-          </Text>
-          <Button
-            style={styles.Button}
-            mode="contained"
-            uppercase={false}
-            labelStyle={styles.labelStyle}
-            onPress={() => navigation.navigate('Home')}>
-            Ok
-          </Button>
-        </>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
       ) : (
-        <>
-          <Text>Data is not available</Text>
-        </>
+        <View>
+          {data && data.length > 0 ? (
+            <>
+              {renderField('Manufacture', data[0]?.manufacture_id)}
+              {renderField('Store', data[0]?.store_id)}
+              {renderField('Main Distributor', data[0]?.main_distributor_id)}
+              {renderField('Sub Distributor', data[0]?.sub_distributor_id)}
+              {renderField('Pharmacy', data[0]?.pharmacy_id)}
+              <Text
+                style={[
+                  styles.validationText,
+                  {color: isValid ? 'green' : 'red'},
+                ]}>
+                {isValid ? 'Drug is valid' : 'Drug is invalid'}
+              </Text>
+              <Button
+                style={styles.Button}
+                mode="contained"
+                uppercase={false}
+                labelStyle={styles.labelStyle}
+                onPress={() => navigation.navigate('Home')}>
+                Ok
+              </Button>
+            </>
+          ) : (
+            <>
+              <Text>Data is not available</Text>
+            </>
+          )}
+        </View>
       )}
     </View>
   );
-
-  // return (
-  //   <View style={styles.container}>
-  //     {isLoading ? (
-  //       <View style={styles.loadingContainer}>
-  //         <ActivityIndicator size="large" color="blue" />
-  //       </View>
-  //     ) : (
-  //       <View>
-  //         {data && data.length > 0 ? (
-  //           <>
-  //             {renderField('Manufacture', data?.manufacture_id)}
-  //             {renderField('Store', data?.store_id)}
-  //             {renderField('Main Distributor', data?.main_distributor_id)}
-  //             {renderField('Sub Distributor', data?.sub_distributor_id)}
-  //             {renderField('Pharmacy', data?.pharmacy_id)}
-  //             <Text
-  //               style={[
-  //                 styles.validationText,
-  //                 {color: isValid ? 'green' : 'red'},
-  //               ]}>
-  //               {isValid ? 'Drug is valid' : 'Drug is invalid'}
-  //             </Text>
-  //             <Button
-  //               style={styles.Button}
-  //               mode="contained"
-  //               uppercase={false}
-  //               labelStyle={styles.labelStyle}
-  //               onPress={() => navigation.navigate('Home')}>
-  //               Ok
-  //             </Button>
-  //           </>
-  //         ) : (
-  //           <>
-  //             <Text>Data is not available</Text>
-  //           </>
-  //         )}
-  //       </View>
-  //     )}
-  //   </View>
-  // );
 }
 
 const styles = StyleSheet.create({

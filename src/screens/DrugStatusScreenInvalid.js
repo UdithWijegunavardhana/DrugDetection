@@ -15,109 +15,47 @@ import axios from 'axios';
 //   },
 // ];
 
-export default function DrugStatusScreen({route, navigation}) {
-
-  const { imageData } = route.params;
-  const {upperButtonResponce} = route.params;
-  const {lowerButtonResponce} = route.params;
+export default function DrugStatusScreenInvalid({route, navigation}) {
+  //   const { imageData } = route.params;
   const [isLoading, setIsLoading] = React.useState(true);
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState([]);
   const [isValid, setIsValid] = React.useState(false);
 
-  const readImageFile = async (imagePath) => {
-    try {
-      const imageData = await RNFS.readFile(imagePath, 'base64');
-      return imageData;
-    } catch (error) {
-      console.error('Error reading image file:', error);
-      return null;
-    }
-  };
+  //   const readImageFile = async (imagePath) => {
+  //     try {
+  //       const imageData = await RNFS.readFile(imagePath, 'base64');
+  //       return imageData;
+  //     } catch (error) {
+  //       console.error('Error reading image file:', error);
+  //       return null;
+  //     }
+  //   };
 
   React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const response = await axios.get(
+        //   'https://0c2c-212-104-225-103.ngrok-free.app/check_id_status/8902541600416'
+        // );
+        const response = await axios.get(
+          'http://172.20.10.4:5000/check_id_status/8902541600558',
+        );
+        // setData(response.data);
+        setData(DrugData);
+        setIsLoading(false);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
 
-    // console.log(' ✅ passed image data ✅ : ',imageData);
-
-    // const {base64, uri, width, height, fileSize, type, fileName} = imageData[0];
-    //       console.log('base64 ->', base64);
-    //       console.log('uri ->', uri);
-    //       console.log('width ->', width);
-    //       console.log('height ->', height);
-    //       console.log('fileSize ->', fileSize);
-    //       console.log('type ->', type);
-    //       console.log('fileName ->', fileName);
-
-    // const uploadImage = async () => {
-    //   setIsLoading(true);
-    //   try {
-    //     const imageReadData = await readImageFile(uri);
-    //     if (!imageReadData) {
-    //       console.log('Failed to read image file.');
-    //       return;
-    //     }
-    //     console.log('ImageData:', imageReadData);
-
-    //     const base64ImageData = imageReadData.toString('base64');
-    //     console.log('base64ImageData:', base64ImageData);
-
-    //     const formData = new FormData();
-    //     // formData.append('image', base64ImageData);
-
-    //     formData.append('file', imageReadData);
-
-    //     // formData.append('image', {
-    //     //   uri: uri,
-    //     //   type: 'image/jpg',
-    //     //   filename: fileName,
-    //     // });
-
-    //     axios
-    //       .post('http://172.20.10.4:5000/barcode', formData, {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //         },
-    //       })
-    //       // axios({
-    //       //   method: 'post',
-    //       //   url: 'http://172.20.10.4:5000/barcode',
-    //       //   data: formData,
-    //       //   headers: {'content-type': 'multipart/form-data'},
-    //       // })
-    //       .then(response => {
-    //         console.log('Response:', response.data);
-    //         setData(response.data);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error:', error);
-    //       });
-    //   } catch (error) {
-    //     console.error('Error:', error);
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
-  
-    // if (imageData) {
-    //   uploadImage();
-    // }
-
-    if(upperButtonResponce){
-      setData(upperButtonResponce);
-    }else if(lowerButtonResponce){
-      setData(lowerButtonResponce)
-    }else{
-      console.log('⭕️ No Data Received ⭕️');
-    }
-
-    // return () => {
-    //   setIsLoading(true);
-    //   setData(null);
-    // };
+    fetchData();
   }, []);
 
   React.useEffect(() => {
     if (data && Array.isArray(data) && data.length > 0) {
-      const isDataValid = Object.values(data[0]).every(
+      const isDataValid = Object.values(data).every(
         value => value !== undefined && value !== null,
       );
       setIsValid(isDataValid);
@@ -152,11 +90,11 @@ export default function DrugStatusScreen({route, navigation}) {
         <View>
           {data && data.length > 0 ? (
             <>
-              {renderField('Manufacture', data[0]?.manufacture_id)}
-              {renderField('Store', data[0]?.store_id)}
-              {renderField('Main Distributor', data[0]?.main_distributor_id)}
-              {renderField('Sub Distributor', data[0]?.sub_distributor_id)}
-              {renderField('Pharmacy', data[0]?.pharmacy_id)}
+              {renderField('Manufacture', data?.manufacture_id)}
+              {renderField('Store', data?.store_id)}
+              {renderField('Main Distributor', data?.main_distributor_id)}
+              {renderField('Sub Distributor', data?.sub_distributor_id)}
+              {renderField('Pharmacy', data?.pharmacy_id)}
               <Text
                 style={[
                   styles.validationText,
